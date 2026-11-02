@@ -1,0 +1,9 @@
+# Signed-by-construction dev loop (CONTEXT.md D-15, D-16, D-17).
+# Cargo invokes the runner with the executable path as $1 for `cargo run`
+# AND for every `cargo test` binary; the script signs only a binary named
+# `snapshade` and execs everything else untouched.
+[target.aarch64-apple-darwin]
+runner = "scripts/sign-and-run.sh"
+
+[target.x86_64-apple-darwin]
+runner = "scripts/sign-and-run.sh"

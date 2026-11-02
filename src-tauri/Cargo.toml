@@ -1,0 +1,72 @@
+[package]
+name = "snapshade"
+description = "Snapshade app composition root (Tauri 2): the only crate that names both OS adapters."
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+publish = false
+
+[[bin]]
+name = "snapshade"
+path = "src/main.rs"
+
+[lib]
+name = "snapshade_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2.7.4", features = [] }
+
+[dependencies]
+# The `macos-private-api` feature is NOT declared here but IS compiled in: tauri-nspanel 2.1.1
+# enables it transitively (STATE.md 01-06 decision). The overlay windows are transparent webviews
+# over a native CALayer frame layer (Plan B, 01-09); tauri.conf.json still sets no `macOSPrivateApi`
+# key (a no-op on Tauri >= 2.12.1, and the config-key prohibition stands).
+tauri = { version = "2.12.5", features = ["tray-icon", "image-png"] }
+tauri-plugin-global-shortcut = "2.4.1"
+# Phase 2: a second launch focuses the running instance (SHELL-03).
+tauri-plugin-single-instance = "2.5.5"
+# Phase 4: start at login (SHELL-04) — LaunchAgent on macOS, Run key on Windows.
+tauri-plugin-autostart = "2.7.0"
+# Phase 3/4: native Save As (PNG/JPG/BMP filters) and folder picker on both OSs.
+rfd = { version = "0.17.2", default-features = false }
+# Phase 3: local-time filenames (`Screenshot at MMM dd HH-mm-ss`) — already in Cargo.lock via tauri.
+chrono = { version = "0.4.45", default-features = false, features = ["clock"] }
+serde.workspace = true
+serde_json.workspace = true
+snapshade-core = { path = "../crates/core" }
+snapshade-platform-api = { path = "../crates/platform-api" }
+
+# D-18: this is the only crate that names both OS adapters, selected by cfg(target_os).
+[target.'cfg(target_os = "macos")'.dependencies]
+snapshade-platform-macos = { path = "../crates/platform-macos" }
+# tauri-nspanel 2.1.1 (crates.io, objc2-based line): approved at the Plan 01-06 Task 1 human
+# legitimacy checkpoint (user response: "approved"). Converts each overlay WebviewWindow into a
+# non-activating NSPanel exactly once (RESEARCH Q4).
+tauri-nspanel = "2.1.1"
+# `exception`: catch an Objective-C exception thrown while closing a converted panel on
+# display change (RESEARCH Q4 line 416, A8) instead of aborting the process. The feature
+# is already enabled transitively by tauri-nspanel; declaring it adds no package.
+objc2 = { version = "0.6.5", features = ["exception"] }
+# `NSEvent`: the local key-down monitor that forwards the ⌘Z key equivalent to the overlay page
+# (Plan 01-10 Task 3 fallback). block2 0.6.2 is already in Cargo.lock (objc2-app-kit / platform-macos);
+# declaring it here adds a dependency edge, no package (T-01-SC).
+objc2-app-kit = { version = "0.3.2", features = ["NSScreen", "NSWindow", "NSResponder", "NSView", "NSGraphics", "NSApplication", "NSRunningApplication", "NSEvent", "objc2-core-foundation"] }
+block2 = "0.6.2"
+objc2-foundation = { version = "0.3.2", features = ["NSString", "NSDictionary", "NSArray", "NSValue", "NSThread", "NSGeometry", "NSEnumerator", "NSURL"] }
+
+[target.'cfg(target_os = "windows")'.dependencies]
+snapshade-platform-windows = { path = "../crates/platform-windows" }
+# Plan 999.4-01: WebView2 shared buffers for the zero-copy frame handoff
+# (`ICoreWebView2Environment12::CreateSharedBuffer` / `ICoreWebView2_17::PostSharedBufferToScript`).
+# Both crates are already in Cargo.lock through wry: a dependency edge, no new package (T-01-SC).
+webview2-com = "0.39.1"
+windows-core = "0.62.2"
+
+[features]
+# Exactly the Tauri template shape: the CLI's dev build toggles `custom-protocol` off
+# (`cargo run --no-default-features`), which is what marks a dev build for tauri-codegen.
+default = ["custom-protocol"]
+custom-protocol = ["tauri/custom-protocol"]

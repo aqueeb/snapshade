@@ -1,0 +1,8 @@
+# Keep LF everywhere (rustfmt, bun, the .sh scripts and the golden PNG hashes depend on it);
+# Git for Windows would otherwise convert to CRLF on checkout.
+* text=auto eol=lf
+*.ps1 text eol=crlf
+*.png binary
+*.icns binary
+*.ico binary
+*.jsonl binary

@@ -1,0 +1,96 @@
+[package]
+name = "snapshade-platform-macos"
+description = "macOS adapters for Snapshade (AppKit, ScreenCaptureKit, CoreGraphics). Empty crate on every other target."
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+publish = false
+
+[dependencies]
+snapshade-core = { path = "../core" }
+snapshade-platform-api = { path = "../platform-api" }
+
+# AppKit / ScreenCaptureKit / CoreGraphics bindings go ONLY in this table so that
+# `cargo check --workspace` on windows-latest sees an empty crate (D-18, D-21).
+# Every version is an exact pin (T-01-SC); `macos_14_0` (not 15) matches PKG-03's minimum.
+[target.'cfg(target_os = "macos")'.dependencies]
+screencapturekit = { version = "11.0.0", features = ["macos_14_0"] }
+core-graphics = "0.25.0"
+core-foundation = "0.10.1"
+objc2 = "0.6.5"
+# block2 0.6.2 was already in Cargo.lock (objc2-app-kit's dependency); declared here for the
+# NSNotificationCenter block observer (Plan 01-07 Task 3). No new package (T-01-SC).
+block2 = "0.6.2"
+objc2-app-kit = { version = "0.3.2", features = [
+  "NSScreen",
+  "NSWindow",
+  "NSResponder",
+  "NSView",
+  "NSGraphics",
+  "NSApplication",
+  "NSRunningApplication",
+  "objc2-core-foundation",
+  # Unlocks `NSView::layer()` for the native frame layer (Plan 01-09).
+  "objc2-quartz-core",
+  # Phase 3 export: PNG + TIFF pasteboard write, NSPrintOperation scaled to the page,
+  # Finder reveal, and the System Settings deep link (Phase 2 permission guidance).
+  "NSPasteboard",
+  "NSPasteboardItem",
+  "NSBitmapImageRep",
+  "NSImage",
+  "NSImageRep",
+  "NSImageView",
+  "NSImageCell",
+  "NSControl",
+  "NSCell",
+  "NSPrintOperation",
+  "NSPrintInfo",
+  "NSPrintPanel",
+  "NSWorkspace",
+] }
+# Phase 3 notifications: UNUserNotificationCenter with a click delegate ("Click to show it
+# in the folder" reveals the file). Already in Cargo.lock via tauri (no new package).
+objc2-user-notifications = { version = "0.3.2", default-features = false, features = [
+  "UNUserNotificationCenter",
+  "UNNotificationRequest",
+  "UNNotificationContent",
+  "UNNotificationResponse",
+  "UNNotification",
+  "UNNotificationSettings",
+  "UNNotificationTrigger",
+  "block2",
+  "std",
+] }
+image.workspace = true
+# objc2-quartz-core 0.3.2 was already in Cargo.lock (tao/wry depend on it); declared here for the
+# CALayer that holds the frozen frame beneath the transparent webview (Plan 01-09 Plan B,
+# RESEARCH Q5 line 461). `objc2-core-foundation` gates `setContentsScale` (CGFloat). Default
+# features are OFF: the crate's defaults pull objc2-metal / objc2-core-video, which are NOT in
+# Cargo.lock — the three features below resolve to the same package set tao/wry already lock.
+# No new package (T-01-SC).
+objc2-quartz-core = { version = "0.3.2", default-features = false, features = [
+  "CALayer",
+  "CATransaction",
+  "objc2-core-foundation",
+] }
+objc2-foundation = { version = "0.3.2", features = [
+  "NSString",
+  "NSDictionary",
+  "NSArray",
+  "NSValue",
+  "NSThread",
+  "NSNotification",
+  "NSProcessInfo",
+  "NSGeometry",
+  "NSEnumerator",
+  "NSOperation",
+  "block2",
+  "NSURL",
+  "NSData",
+  "NSError",
+  "NSBundle",
+  "NSSet",
+  "NSObject",
+] }

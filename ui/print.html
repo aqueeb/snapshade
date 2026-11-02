@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Print</title>
+    <style>
+      html, body { margin: 0; height: 100%; background: #fff; }
+      img { display: block; max-width: 100%; max-height: 100vh; margin: 0 auto; }
+      @page { margin: 12mm; }
+      @media print {
+        html, body { height: auto; }
+        img { max-width: 100%; max-height: 100%; width: auto; height: auto; page-break-inside: avoid; }
+      }
+    </style>
+  </head>
+  <body>
+    <img id="shot" alt="Screenshot" />
+    <script type="module" src="/src/print/main.ts"></script>
+  </body>
+</html>

@@ -1,0 +1,21 @@
+{
+  "name": "snapshade",
+  "private": true,
+  "workspaces": [
+    "ui"
+  ],
+  "scripts": {
+    "dev": "bun run --cwd ui dev",
+    "build": "bun run --cwd ui build",
+    "build:debug": "tauri build --debug --bundles app && scripts/sign-bundle.sh target/debug/bundle/macos/Snapshade.app",
+    "build:release": "tauri build --bundles app && scripts/sign-bundle.sh target/release/bundle/macos/Snapshade.app",
+    "test": "bun run --cwd ui test",
+    "lint": "bun run --cwd ui lint",
+    "typecheck": "bun run --cwd ui typecheck",
+    "tauri": "tauri"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "2.12.4",
+    "typescript": "5.9.3"
+  }
+}

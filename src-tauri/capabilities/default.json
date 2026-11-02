@@ -1,0 +1,12 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "default",
+  "description": "overlay panels, Options, About and permission-guidance windows",
+  "windows": ["overlay-*", "options", "about", "permission", "print"],
+  "permissions": [
+    "core:default",
+    "core:window:allow-close",
+    "core:window:allow-hide",
+    "core:window:allow-set-focus"
+  ]
+}

@@ -1,0 +1,15 @@
+[package]
+name = "snapshade-core"
+description = "Pure core of Snapshade: geometry, display topology, capture types, encoders, hotkey model, settings. No OS or Tauri dependencies (D-01, D-06, D-18)."
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+publish = false
+
+[dependencies]
+image.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+thiserror.workspace = true

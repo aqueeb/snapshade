@@ -1,0 +1,3 @@
+# Stable channel, no patch pin (RESEARCH Q1): CI uses dtolnay/rust-toolchain@stable.
+[toolchain]
+channel = "stable"

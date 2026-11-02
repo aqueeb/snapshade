@@ -1,0 +1,208 @@
+/* Overlay page. The page is transparent: the frozen frame is composited natively beneath
+   it (macOS) and only the dim + chrome show through. */
+html,
+body {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+  background: transparent;
+  cursor: crosshair;
+  font: 12px -apple-system, "Segoe UI", Arial, Helvetica, sans-serif;
+  color: #fff;
+  -webkit-user-select: none;
+  user-select: none;
+}
+[hidden] {
+  display: none !important;
+}
+canvas {
+  position: fixed;
+  inset: 0;
+  touch-action: none;
+}
+#anno {
+  inset: auto;
+  pointer-events: auto;
+}
+#chrome > * {
+  position: fixed;
+  left: 0;
+  top: 0;
+}
+.strip {
+  display: flex;
+  gap: 2px;
+  padding: 3px;
+  background: rgba(32, 32, 32, 0.92);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.45);
+  z-index: 5;
+}
+.strip.vertical {
+  flex-direction: column;
+}
+.strip.horizontal {
+  flex-direction: row;
+}
+.tb {
+  width: 26px;
+  height: 26px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  border-radius: 3px;
+  background: transparent;
+  color: #f2f2f2;
+  cursor: pointer;
+}
+.tb:hover {
+  background: rgba(255, 255, 255, 0.14);
+}
+.tb:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+/* ANNOT-13: the active tool uses the OS accent colour so it is visible in light and dark. */
+.tb.active {
+  background: AccentColor;
+  color: AccentColorText;
+}
+.tb.color .swatch {
+  display: block;
+  width: 16px;
+  height: 16px;
+  border-radius: 2px;
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.6);
+}
+#badge {
+  padding: 2px 5px;
+  background: rgba(0, 0, 0, 0.7);
+  color: #fff;
+  font: 12px Arial, Helvetica, sans-serif; /* W×H badge */
+  border-radius: 2px;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 4;
+}
+#tip {
+  padding: 3px 7px;
+  background: rgba(0, 0, 0, 0.75);
+  color: #fff;
+  border-radius: 3px;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 4;
+}
+#palette {
+  display: grid;
+  grid-template-columns: repeat(8, 20px);
+  gap: 4px;
+  padding: 6px;
+  background: rgba(32, 32, 32, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.45);
+  z-index: 6;
+}
+.pal {
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 2px;
+  cursor: pointer;
+}
+.pal.custom {
+  grid-column: 1 / -1;
+  width: auto;
+  height: 22px;
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  font: inherit;
+}
+#ctxmenu {
+  display: flex;
+  flex-direction: column;
+  min-width: 140px;
+  padding: 4px;
+  background: rgba(40, 40, 40, 0.97);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 6px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5);
+  z-index: 7;
+}
+.mi {
+  text-align: left;
+  padding: 5px 10px;
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+  color: #fff;
+  font: inherit;
+  cursor: pointer;
+}
+.mi:hover {
+  background: AccentColor;
+  color: AccentColorText;
+}
+#hint {
+  left: 50%;
+  top: 24px;
+  transform: translateX(-50%);
+  padding: 6px 12px;
+  background: rgba(0, 0, 0, 0.8);
+  color: #fff;
+  border-radius: 14px;
+  pointer-events: none;
+  z-index: 8;
+}
+#textbox {
+  position: fixed;
+  z-index: 6;
+  margin: 0;
+  padding: 0;
+  border: 1px dashed rgba(255, 255, 255, 0.8);
+  background: transparent;
+  outline: none;
+  resize: none;
+  overflow: hidden;
+  white-space: pre;
+  cursor: text;
+  -webkit-user-select: text;
+  user-select: text;
+}
+#color {
+  position: fixed;
+  left: -100px;
+  top: -100px;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+#error {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  padding: 10px 16px;
+  background: rgba(120, 0, 0, 0.9);
+  color: #fff;
+  border-radius: 6px;
+  z-index: 9;
+}
+#probe {
+  position: fixed;
+  top: 8px;
+  left: 8px;
+  width: 220px;
+  height: 24px;
+  box-sizing: border-box;
+  z-index: 2;
+  font: 12px sans-serif;
+  cursor: text;
+}

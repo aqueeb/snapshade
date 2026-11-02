@@ -1,0 +1,16 @@
+[package]
+name = "snapshade-platform-fake"
+description = "Headless in-memory platform for Snapshade tests: scripted displays and frames."
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+publish = false
+
+[dependencies]
+snapshade-core = { path = "../core" }
+snapshade-platform-api = { path = "../platform-api" }
+# Workspace-pinned (01-01); used only to read fixtures/geometry/displays.json layouts.
+serde.workspace = true
+serde_json.workspace = true

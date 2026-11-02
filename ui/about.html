@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>About Snapshade</title>
+    <link rel="stylesheet" href="/src/shared/dialog.css" />
+    <style>
+      body { text-align: center; padding-top: 28px; }
+      .logo { width: 72px; height: 72px; margin: 0 auto 10px; border-radius: 16px; background: AccentColor; display: flex; align-items: center; justify-content: center; color: AccentColorText; font-size: 34px; font-weight: 700; }
+      .version { color: var(--muted); margin-bottom: 14px; }
+      .links { display: flex; gap: 8px; justify-content: center; margin-top: 18px; }
+    </style>
+  </head>
+  <body>
+    <div class="logo" aria-hidden="true">S</div>
+    <h1>Snapshade</h1>
+    <div class="version" id="version"></div>
+    <p data-s="about.tagline"></p>
+    <p class="muted" data-s="about.noNetwork"></p>
+    <p class="muted" data-s="about.license"></p>
+    <div class="links">
+      <button class="secondary" id="github" type="button">GitHub</button>
+      <button class="secondary" id="options" type="button" data-s="options.title"></button>
+    </div>
+    <script type="module" src="/src/about/main.ts"></script>
+  </body>
+</html>

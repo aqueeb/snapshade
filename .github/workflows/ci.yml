@@ -1,0 +1,56 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+env:
+  # CI builds are unsigned (D-17): the Plan 01-03 signing runner no-ops when CI is set.
+  CI: "true"
+
+jobs:
+  macos:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+      - uses: Swatinem/rust-cache@v2
+        if: ${{ !env.ACT }}
+        with:
+          workspaces: ". -> target"
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: "1.3.14"
+      - run: bun install --frozen-lockfile
+      # ui/dist must exist before any cargo step once src-tauri joins the workspace (Plan 01-03).
+      - run: bun run --cwd ui build
+      - run: bun run --cwd ui lint
+      - run: bun run --cwd ui typecheck
+      - run: bun run --cwd ui test
+      - run: cargo fmt --all --check
+      - run: cargo clippy --workspace --all-targets --locked -- -D warnings
+      - run: cargo build --workspace --locked
+      - run: cargo test --workspace --locked
+
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+        if: ${{ !env.ACT }}
+        with:
+          workspaces: ". -> target"
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: "1.3.14"
+      - run: bun install --frozen-lockfile
+      - run: bun run --cwd ui build
+      - run: bun run --cwd ui test
+      # The architectural guardrail (D-21): an OS import in core fails this check.
+      # Covers src-tauri automatically once Plan 01-03 adds it to `members`.
+      - run: cargo check --workspace --locked
+      - run: cargo test -p snapshade-core -p snapshade-platform-api -p snapshade-platform-fake -p snapshade-platform-windows --locked

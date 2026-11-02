@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Options</title>
+    <link rel="stylesheet" href="/src/shared/dialog.css" />
+  </head>
+  <body>
+    <div class="tabs" role="tablist">
+      <button class="tab active" role="tab" data-tab="general" type="button">General</button>
+      <button class="tab" role="tab" data-tab="hotkeys" type="button">Hotkeys</button>
+      <button class="tab" role="tab" data-tab="formats" type="button">Formats</button>
+    </div>
+
+    <section class="panel" data-panel="general">
+      <label class="check"><input type="checkbox" id="show_notifications" /> <span data-s="options.general.notifications"></span></label>
+      <label class="check"><input type="checkbox" id="capture_cursor" /> <span data-s="options.general.cursor"></span></label>
+      <label class="check"><input type="checkbox" id="keep_selection_position" /> <span data-s="options.general.keepSelection"></span></label>
+      <label class="check"><input type="checkbox" id="start_at_login" /> <span data-s="options.general.startAtLogin"></span></label>
+      <div class="row">
+        <label for="language" data-s="options.general.language"></label>
+        <select id="language"><option value="en">English</option></select>
+      </div>
+    </section>
+
+    <section class="panel" data-panel="hotkeys" hidden>
+      <div class="row">
+        <input type="checkbox" id="capture_enabled" checked disabled aria-label="General hotkey enabled" />
+        <label for="capture_hotkey" data-s="options.hotkeys.general"></label>
+        <button class="hotkey" id="capture_hotkey" type="button"></button>
+      </div>
+      <div class="row">
+        <input type="checkbox" id="instant_save_enabled" />
+        <label for="instant_save_hotkey" data-s="options.hotkeys.instantSave"></label>
+        <button class="hotkey" id="instant_save_hotkey" type="button"></button>
+      </div>
+      <p class="muted" data-s="options.hotkeys.record"></p>
+    </section>
+
+    <section class="panel" data-panel="formats" hidden>
+      <div class="row">
+        <label for="default_format" data-s="options.formats.default"></label>
+        <select id="default_format">
+          <option value="png">PNG</option>
+          <option value="jpeg">JPEG</option>
+          <option value="bmp">BMP</option>
+        </select>
+      </div>
+      <div class="row">
+        <label for="jpeg_quality" data-s="options.formats.quality"></label>
+        <input type="range" id="jpeg_quality" min="1" max="100" />
+        <span id="jpeg_quality_value" style="width: 2.5em; text-align: right"></span>
+      </div>
+      <div class="row">
+        <label for="optimize_png" data-s="options.formats.optimize"></label>
+        <select id="optimize_png">
+          <option value="never" data-s="options.formats.never"></option>
+          <option value="always" data-s="options.formats.always"></option>
+        </select>
+      </div>
+      <div class="row">
+        <label data-s="options.formats.folder"></label>
+        <span class="path" id="default_folder" title=""></span>
+        <button class="secondary" id="browse" type="button" data-s="options.formats.browse"></button>
+      </div>
+    </section>
+
+    <div class="error" id="error" role="alert"></div>
+    <script type="module" src="/src/options/main.ts"></script>
+  </body>
+</html>

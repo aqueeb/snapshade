@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Snapshade overlay</title>
+    <link rel="stylesheet" href="/src/overlay/overlay.css" />
+  </head>
+  <body>
+    <!-- #frame is painted only where no native frame layer exists (Windows / self-test);
+         #dim is the veil + selection chrome; #anno is the annotation preview over the hole. -->
+    <canvas id="frame" hidden></canvas>
+    <canvas id="dim"></canvas>
+    <canvas id="anno" hidden></canvas>
+    <div id="chrome"></div>
+    <textarea id="textbox" hidden rows="1" spellcheck="false" autocomplete="off" aria-label="Text annotation"></textarea>
+    <input id="color" type="color" aria-label="Custom color" tabindex="-1" />
+    <div id="error" hidden role="alert"></div>
+    <input id="probe" type="text" hidden placeholder="Type to test keyboard focus" autocomplete="off" aria-label="keyboard focus probe" />
+    <script type="module" src="/src/overlay/main.ts"></script>
+  </body>
+</html>

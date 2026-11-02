@@ -1,0 +1,13 @@
+[package]
+name = "snapshade-platform-api"
+description = "Platform abstraction layer for Snapshade: traits only. Implemented by platform-macos, platform-windows, and platform-fake."
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+publish = false
+
+[dependencies]
+snapshade-core = { path = "../core" }
+thiserror.workspace = true

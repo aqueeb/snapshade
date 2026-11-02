@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Snapshade</title>
+    <link rel="stylesheet" href="/src/shared/dialog.css" />
+  </head>
+  <body>
+    <h1 data-s="permission.title"></h1>
+    <p data-s="permission.body"></p>
+    <p class="muted">If you already granted it and nothing happens, Snapshade must be fully quit and relaunched — macOS applies the grant to new processes only.</p>
+    <div class="actions">
+      <button class="secondary" id="later" type="button" data-s="permission.later"></button>
+      <button class="secondary" id="open" type="button" data-s="permission.open"></button>
+      <button class="primary" id="relaunch" type="button" data-s="permission.relaunch"></button>
+    </div>
+    <script type="module" src="/src/permission/main.ts"></script>
+  </body>
+</html>

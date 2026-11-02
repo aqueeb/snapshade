@@ -1,0 +1,57 @@
+{
+  "version": 1,
+  "_doc": "Shared geometry fixture (D-05): the single source of truth for the Rust (crates/core) and TypeScript (ui/src/core) geometry tests; neither suite may edit it. Global logical space: top-left origin, y-down (CoreGraphics/Windows convention); the macOS adapter flips NSScreen.frame once at the boundary using screens[0].frame.height: y_top = primary_h - (frame.origin.y + frame.size.height). Rounding: floor(v + 0.5) in both languages (Rust f64::round and JS Math.round disagree at -0.5). Display-local physical = round_half_up((p - origin) * scale), clamped to [0, px - 1]. Physical size = round_half_up(w_pt * scale). Hit-test: the display whose logical rect contains the point, half-open (x in [x0, x0 + w)); where logical rects overlap (Windows mixed-DPI) the first display in topology order (primary, then ascending id) wins. Physical coords are per-display, top-left of that display's bitmap. Ops: physical_size, to_physical, to_logical, hit_test, flip_nsscreen. Exact integer equality for physical outputs; 1e-9 for logical.",
+  "layouts": {
+    "single-1x": {
+      "displays": [
+        { "id": 1, "logical": [0, 0, 1920, 1080], "scale": 1.0, "primary": true }
+      ]
+    },
+    "single-2x": {
+      "displays": [
+        { "id": 1, "logical": [0, 0, 1512, 982], "scale": 2.0, "primary": true }
+      ]
+    },
+    "retina-plus-1x-right": {
+      "displays": [
+        { "id": 1, "logical": [0, 0, 1512, 982], "scale": 2.0, "primary": true },
+        { "id": 2, "logical": [1512, -229, 2560, 1440], "scale": 1.0, "primary": false }
+      ]
+    },
+    "negative-origin-left": {
+      "displays": [
+        { "id": 1, "logical": [0, 0, 1512, 982], "scale": 2.0, "primary": true },
+        { "id": 2, "logical": [-2560, -458, 2560, 1440], "scale": 1.0, "primary": false }
+      ]
+    },
+    "win-150-plus-100": {
+      "platform": "windows",
+      "displays": [
+        { "id": 1, "logical": [0, 0, 1280, 720], "scale": 1.5, "primary": true },
+        { "id": 2, "logical": [1280, 0, 1920, 1080], "scale": 1.0, "primary": false }
+      ]
+    },
+    "win-125": {
+      "platform": "windows",
+      "displays": [
+        { "id": 1, "logical": [0, 0, 2048, 1152], "scale": 1.25, "primary": true }
+      ]
+    }
+  },
+  "cases": [
+    { "name": "2x physical size", "layout": "single-2x", "op": "physical_size", "display": 1, "expect": [3024, 1964] },
+    { "name": "1.5x rounds half up", "layout": "win-150-plus-100", "op": "to_physical", "display": 1, "in": [1.0, 1.0], "expect": [2, 2] },
+    { "name": "1.25x exact", "layout": "win-125", "op": "to_physical", "display": 1, "in": [4.0, 8.0], "expect": [5, 10] },
+    { "name": "1.25x half-up", "layout": "win-125", "op": "to_physical", "display": 1, "in": [2.0, 2.0], "expect": [3, 3] },
+    { "name": "external origin → 0,0", "layout": "retina-plus-1x-right", "op": "to_physical", "display": 2, "in": [1512.0, -229.0], "expect": [0, 0] },
+    { "name": "negative origin point", "layout": "negative-origin-left", "op": "to_physical", "display": 2, "in": [-2559.5, -457.5], "expect": [1, 1] },
+    { "name": "clamp beyond right edge", "layout": "single-2x", "op": "to_physical", "display": 1, "in": [2000.0, 10.0], "expect": [3023, 20] },
+    { "name": "hit-test external", "layout": "retina-plus-1x-right", "op": "hit_test", "in": [1600.0, 100.0], "expect": 2 },
+    { "name": "hit-test negative", "layout": "negative-origin-left", "op": "hit_test", "in": [-1.0, 0.0], "expect": 2 },
+    { "name": "hit-test gap → none", "layout": "retina-plus-1x-right", "op": "hit_test", "in": [1600.0, -300.0], "expect": null },
+    { "name": "round trip 2x", "layout": "single-2x", "op": "to_logical", "display": 1, "in": [3023, 1963], "expect": [1511.5, 981.5] },
+    { "name": "macos raw flip", "layout": "retina-plus-1x-right", "op": "flip_nsscreen", "primary_height_pt": 982, "in_nsrect": [1512, -229, 2560, 1440], "expect_logical": [1512, -229, 2560, 1440] },
+    { "name": "hit-test shared edge belongs to the right display", "layout": "retina-plus-1x-right", "op": "hit_test", "in": [1512.0, 100.0], "expect": 2 },
+    { "name": "macos flip external above primary", "layout": "retina-plus-1x-right", "op": "flip_nsscreen", "primary_height_pt": 982, "in_nsrect": [0, 982, 2560, 1440], "expect_logical": [0, -1440, 2560, 1440] }
+  ]
+}
