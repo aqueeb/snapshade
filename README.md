@@ -4,6 +4,10 @@
 
 # Snapshade
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Release](https://img.shields.io/github/v/release/aqueeb/snapshade)](https://github.com/aqueeb/snapshade/releases)
+[![Buy Me A Coffee](https://img.shields.io/badge/Buy%20Me%20A%20Coffee-support-yellow?logo=buymeacoffee)](https://buymeacoffee.com/aqueeb)
+
 Press a hotkey, drag a region, annotate it in place, copy it. A fast, local-only screenshot
 tool for macOS and Windows.
 
@@ -150,6 +154,12 @@ docs                    behaviour spec, release process
 
 Bug reports and pull requests are welcome; see [CONTRIBUTING.md](CONTRIBUTING.md). Questions
 go in GitHub Issues. Security concerns: [SECURITY.md](SECURITY.md).
+
+If Snapshade saves you time, consider buying me a coffee:
+
+[!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/aqueeb)
+
+Or just star the repo. It helps other people find it.
 
 ## License
 
